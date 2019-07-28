@@ -39,7 +39,7 @@ const PLUGIN_PEER_DEPENDENCIES = {
 
 function getPackageJsonContent(name: string, peerDependencies = {}, dependencies = {}) {
   return merge(PACKAGE_JSON_BASE, {
-    name: '@ionic-native/' + name,
+    name: 'ionic-native-' + name,
     dependencies,
     peerDependencies,
     version: VERSION
@@ -54,18 +54,19 @@ function writePackageJson(data: any, dir: string) {
 
 function prepare() {
   // write @ionic-native/core package.json
-  writePackageJson(
-    getPackageJsonContent('core', { rxjs: RXJS_VERSION }, { '@types/cordova': 'latest' }),
-    path.resolve(DIST, 'core')
-  );
+  // writePackageJson(
+  //   getPackageJsonContent('core', { rxjs: RXJS_VERSION }, { '@types/cordova': 'latest' }),
+  //   path.resolve(DIST, 'core')
+  // );
 
   // write plugin package.json files
   PLUGIN_PATHS.forEach((pluginPath: string) => {
-    const pluginName = pluginPath.split(/[\/\\]+/).slice(-2)[0];
-    const packageJsonContents = getPackageJsonContent(pluginName, PLUGIN_PEER_DEPENDENCIES);
-    const dir = path.resolve(DIST, 'plugins', pluginName);
-
-    writePackageJson(packageJsonContents, dir);
+    if (pluginPath.includes('urban')) {
+      const pluginName = pluginPath.split(/[\/\\]+/).slice(-2)[0];
+      const packageJsonContents = getPackageJsonContent(pluginName, PLUGIN_PEER_DEPENDENCIES);
+      const dir = path.resolve(DIST, 'plugins', pluginName);
+      writePackageJson(packageJsonContents, dir);
+    }
   });
 }
 
