@@ -61,7 +61,7 @@ function prepare() {
 
   // write plugin package.json files
   PLUGIN_PATHS.forEach((pluginPath: string) => {
-    if (pluginPath.includes('urban')) {
+    if (pluginPath.includes('urbanairship') || pluginPath.includes('intercom')) {
       const pluginName = pluginPath.split(/[\/\\]+/).slice(-2)[0];
       const packageJsonContents = getPackageJsonContent(pluginName, PLUGIN_PEER_DEPENDENCIES);
       const dir = path.resolve(DIST, 'plugins', pluginName);
