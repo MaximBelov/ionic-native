@@ -62,7 +62,7 @@ export enum LoginListenerType {
    */
   auth_activation_required = 0,
   /**
-   * Applicable for iOS, Android & Windows.
+   * Applicable for mobile.
    * This value indicates user needs to login before using the app. This depends on the setting LOCAL_PASSWORD which is set in UMP Admin Cockpit.
    * If LOCAL_PASSWORD is set to true, this type is set everytime user opens the app.
    */
@@ -117,6 +117,11 @@ export enum LoginType {
    * ```
    */
   sap = 'SAP',
+  /**
+   * EMAIL
+   * Set the type to email to login based on email id.
+   */
+  email = 'EMAIL',
   /**
    * TODO:
    */
@@ -543,7 +548,7 @@ export class UnviredCordovaSDK extends IonicNativePlugin {
   }
 
   /**
-   * Supported for iOS, Android & Windows Platforms.
+   * Supported for mobile Platforms.
    * Display framework settings.
    */
   @Cordova()
@@ -555,7 +560,7 @@ export class UnviredCordovaSDK extends IonicNativePlugin {
    * Get User settings.
    */
   @Cordova()
-  userSettings(): Promise<any> {
+  userSettings(): Promise<SettingsResult> {
     return;
   }
 
@@ -603,8 +608,8 @@ export class UnviredCordovaSDK extends IonicNativePlugin {
   /**
    * Get a random id to use as guid.
    */
-  @Cordova()
-  guid() {
+  @Cordova({ sync: true })
+  guid(): string {
     return;
   }
 
@@ -627,10 +632,13 @@ export class UnviredCordovaSDK extends IonicNativePlugin {
   /**
    * Select records from Database
    * @param tableName table name. Example: CUSTOMER_HEADER
-   * @param whereClause {Object} JSON object containing name-value pairs.
+   * @param whereClause {Object} Browser: JSON object containing name-value pairs.
+   * Mobile: Or a Sqlite whereClause ( without the 'where' keyword )
    * Example:
    * ```
-   * # Select values from FORM_HEADER table where FORM_ID is 5caed815892215034dacad56
+   * # Mobile: Select values from FORM_HEADER table where FORM_ID is 5caed815892215034dacad56
+   * this.unviredSDK.dbSelect('FORM_HEADER', "FORM_ID = '5caed815892215034dacad56'")
+   * # Mobile & Browser: Select values from FORM_HEADER table where FORM_ID is 5caed815892215034dacad56
    * this.unviredSDK.dbSelect('FORM_HEADER', {"FORM_ID": "5caed815892215034dacad56"})
    * ```
    */
@@ -676,11 +684,15 @@ export class UnviredCordovaSDK extends IonicNativePlugin {
   /**
    * Delete records from the database.
    * @param tableName Name of the table
-   * @param whereClause {Object} JSON object containing name-value pairs.
+   * @param whereClause {Object} Browser: JSON object containing name-value pairs.
+   * Mobile: Or a Sqlite whereClause ( without the 'where' keyword )
    * Example:
    * ```
-   * # Delete CUSTOMER_HEADER where F_NAME equals TARAK
-   * this.unviredSDK.dbDelete('CUSTOMER_HEADER', {'F_NAME':'TARAK'})
+   * Select values from FORM_HEADER table where FORM_ID is 5caed815892215034dacad56
+   * # Mobile
+   * this.unviredSDK.dbDelete('FORM_HEADER', "FORM_ID = '5caed815892215034dacad56'")
+   * # Browser & Mobile
+   * this.unviredSDK.dbDelete('FORM_HEADER', {"FORM_ID": "5caed815892215034dacad56"})
    * ```
    */
   @Cordova()
@@ -691,12 +703,16 @@ export class UnviredCordovaSDK extends IonicNativePlugin {
   /**
    * Update records in database.
    * @param tableName Name of the table
-   * @param updatedObject JSON object containing name-value pairs.
-   * @param whereClause {Object} JSON object containing name-value pairs.
+   * @param updatedObject JSON object containing updateds name-value pairs.
+   * @param whereClause {Object} Browser: JSON object containing name-value pairs.
+   * Mobile: Or a Sqlite where Clause ( without the 'where' keyword )
    * Example:
    * ```
-   * # Update TEAM_NAME of TEAMS_HEADER for team matching TEAM_ID = 8B75B4DB7F134DE08CF446889433B9CC
-   * this.unviredSDK.dbUpdate('TEAMS_HEADER', {'TEAM_NAME': 'SUPPORT'}, {'TEAM_ID': '8B75B4DB7F134DE08CF446889433B9CC' })
+   * Update NAME & NO from FORM_HEADER table where FORM_ID is 5caed815892215034dacad56
+   * # Mobile
+   * this.unviredSDK.dbUpdate('FORM_HEADER', {"NAME":"TARAK","NO":"0039"}, "FORM_ID = '5caed815892215034dacad56'")
+   * # Mobile & Browser
+   * this.unviredSDK.dbUpdate('FORM_HEADER', {"NAME":"TARAK","NO":"0039"}, {"FORM_ID": "5caed815892215034dacad56"})
    * ```
    */
   @Cordova()
@@ -705,7 +721,7 @@ export class UnviredCordovaSDK extends IonicNativePlugin {
   }
 
   /**
-   * Supported in iOS, Android & Windows only.
+   * Supported in mobile only.
    * Execute SQL Statement
    * @param query {string} SQL Statement.
    * Example:
@@ -719,7 +735,7 @@ export class UnviredCordovaSDK extends IonicNativePlugin {
   }
 
   /**
-   * Supported in iOS, Android & Windows only.
+   * Supported in mobile only.
    * Create Savepoint. For more info consult SQLite Documentation ( https://www.sqlite.org/lang_savepoint.html )
    * @param savePoint {string} Name of savepoint
    * Example:
@@ -733,7 +749,7 @@ export class UnviredCordovaSDK extends IonicNativePlugin {
   }
 
   /**
-   * Supported in iOS, Android & Windows only.
+   * Supported in mobile only.
    * Release Savepoint. For more info consult SQLite Documentation ( https://www.sqlite.org/lang_savepoint.html )
    * @param savePoint {string} Name of savepoint
    * ```
@@ -746,7 +762,7 @@ export class UnviredCordovaSDK extends IonicNativePlugin {
   }
 
   /**
-   * Supported in iOS, Android & Windows only.
+   * Supported in mobile only.
    * Rollback Savepoint. For more info consult SQLite Documentation ( https://www.sqlite.org/lang_savepoint.html )
    * @param savePoint {string} Name of the savepoint
    * Example:
@@ -760,7 +776,7 @@ export class UnviredCordovaSDK extends IonicNativePlugin {
   }
 
   /**
-   * Supported in iOS, Android & Windows only.
+   * Supported in mobile only.
    * Begin database transaction.
    * For more info, consult SQLite documentation ( https://www.sqlite.org/lang_transaction.html )
    * Example:
@@ -774,7 +790,7 @@ export class UnviredCordovaSDK extends IonicNativePlugin {
   }
 
   /**
-   * Supported in iOS, Android & Windows only.
+   * Supported in mobile only.
    * End database transaction.
    * For more info, consult SQLite documentation ( https://www.sqlite.org/lang_transaction.html )
    * Example:
@@ -867,14 +883,14 @@ export class UnviredCordovaSDK extends IonicNativePlugin {
    * For PA functions which do not accept any input, set an empty string for this parameter.
    * Example: If Header datastructure needs to be sent, make sure the header datastructure is in the following format:
    * ```
-   * {"CUSTOMER_HEADER": {field_name : field_value,...}}
+   * {"CUSTOMER_HEADER": {"field1" : "value1", "field2" : "value2"}}
    * ```
    * @param customData {Object} This depends on the PA function. This is useful if you want to send custom data to a PA function.
    * Example: You can also use this parameter to send header datastrucrture provided the data structure is formatted like this.
    * ```
    * {
    *   "CATEGORY_BE": [{
-   *     "CATEGORY_HEADER": {field_name : field_value,...}
+   *     "CATEGORY_HEADER": {"field1" : "value1", "field2" : "value2"}
    *   }]
    * }
    * ```
@@ -894,14 +910,14 @@ export class UnviredCordovaSDK extends IonicNativePlugin {
    * For PA functions which do not accept any input, set an empty string for this parameter.
    * Example: If Header datastructure needs to be sent, make sure the header datastructure is in the following format:
    * ```
-   * {"CUSTOMER_HEADER": {field_name : field_value,...}}
+   * {"CUSTOMER_HEADER": {"field1" : "value1", "field2" : "value2"}}
    * ```
    * @param customData {Object} This depends on the PA function. This is useful if you want to send custom data to a PA function.
    * Example: You can also use this parameter to send header datastrucrture provided the data structure is formatted like this.
    * ```
    * {
    *   "CATEGORY_BE": [{
-   *     "CATEGORY_HEADER": {field_name : field_value,...}
+   *     "CATEGORY_HEADER": {"field1" : "value1", "field2" : "value2"}
    *   }]
    * }
    * ```
@@ -971,23 +987,14 @@ export class UnviredCordovaSDK extends IonicNativePlugin {
    * Only one class can subscribe to notifications are any point of time.
    */
   @Cordova({
-    observable: true,
-    clearFunction: 'unRegisterNotifListener'
+    observable: true
   })
   registerNotifListener(): Observable<NotifResult> {
     return;
   }
 
   /**
-   * Unregister the notification listener previously registered.
-   */
-  @Cordova()
-  unRegisterNotifListener(): Promise<any> {
-    return;
-  }
-
-  /**
-   * Supported in iOS, Android & Windows only
+   * Supported in mobile only
    * Check whether a Header datastructure is in outbox.
    * @param beLid LID of the Header datastructure.
    */
@@ -997,7 +1004,7 @@ export class UnviredCordovaSDK extends IonicNativePlugin {
   }
 
   /**
-   * Supported in iOS, Android & Windows only
+   * Supported in mobile only
    * Returns the count of outbox items.
    */
   @Cordova()
@@ -1006,7 +1013,7 @@ export class UnviredCordovaSDK extends IonicNativePlugin {
   }
 
   /**
-   * Supported in iOS, Android & Windows only
+   * Supported in mobile only
    * Checks whether a Header datastructure is in sent and is waiting for response.
    * Typically you would use before allowing the user to update the Header datastructure.
    * @param beLid LID of the Business Entity
@@ -1017,7 +1024,7 @@ export class UnviredCordovaSDK extends IonicNativePlugin {
   }
 
   /**
-   * Supported in iOS, Android & Windows only
+   * Supported in mobile only
    * Returns the count of sent items.
    */
   @Cordova()
@@ -1026,7 +1033,7 @@ export class UnviredCordovaSDK extends IonicNativePlugin {
   }
 
   /**
-   * Supported in iOS, Android & Windows only
+   * Supported in mobile only
    * Returns the count of Inbox items.
    */
   @Cordova()
@@ -1035,7 +1042,7 @@ export class UnviredCordovaSDK extends IonicNativePlugin {
   }
 
   /**
-   * Supported in iOS, Android & Windows only
+   * Supported in mobile only
    * Delete outbox entry for a Header datastructure.
    * @param beLid LID of the Business Entity
    */
