@@ -56,4 +56,13 @@ export class SystemAlertWindowPermission extends IonicNativePlugin {
     return;
   }
 
+  /**
+   * Open notification Settings
+   * @return {Promise<any>} Returns a promise that resolves when something happens
+   */
+  @Cordova()
+  openNotificationSettings(): Promise<any> {
+    return;
+  }
+
 }
