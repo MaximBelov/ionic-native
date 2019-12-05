@@ -309,7 +309,6 @@ export class ContactFindOptions implements IContactFindOptions {
  * @description
  * Access and manage Contacts on the device.
  *
- * @deprecated
  * @usage
  *
  * ```typescript
