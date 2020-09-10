@@ -1,7 +1,26 @@
 import { Injectable } from '@angular/core';
-import { Plugin, Cordova, CordovaInstance, IonicNativePlugin,  } from '@ionic-native/core';
+import { Plugin, CordovaInstance, IonicNativePlugin,  } from '@ionic-native/core';
 
 declare const window: any;
+
+export enum UploadState {
+  UPLOADED = 'UPLOADED',
+  FAILED = 'FAILED',
+  UPLOADING = 'UPLOADING',
+}
+
+export type UploadStateType = keyof typeof UploadState;
+
+export interface UploadEvent{
+  id?: string,	// id of the upload
+  state?: UploadStateType,	// state of the upload (either UPLOADING, UPLOADED or FAILED)
+  statusCode?: number, // response code returned by server after upload is completed
+  serverResponse?: any,	// server response received after upload is completed
+  error?: any, // error message in case of failure
+  errorCode?: number, // error code for any exception encountered
+  progress?: any, // progress for ongoing upload
+  eventId?: string	// id of the event
+}
 
 export interface FTMPayloadOptions {
   id: string,
@@ -18,7 +37,7 @@ export interface FTMPayloadOptions {
 }
 
 export interface FTMOptions {
-  callBack: Function;
+  callBack: (event: UploadEvent) => any;
   config?: {
     parallelUploadsLimit?: number;
   }
