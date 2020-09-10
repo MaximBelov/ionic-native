@@ -65,7 +65,7 @@ function prepare() {
   // write plugin package.json files
   PLUGIN_PATHS.forEach((pluginPath: string) => {
     if (
-      pluginPath.includes('urbanairship') || pluginPath.includes('intercom') || pluginPath.includes('system-alert-window-permission') || pluginPath.includes('anyline') || pluginPath.includes('contacts')
+      pluginPath.includes('urbanairship') || pluginPath.includes('intercom') || pluginPath.includes('system-alert-window-permission') || pluginPath.includes('anyline') || pluginPath.includes('contacts') || pluginPath.includes('background-upload')
     ) {
       const pluginName = pluginPath.split(/[\/\\]+/).slice(-2)[0];
       const packageJsonContents = getPackageJsonContent(pluginName, PLUGIN_PEER_DEPENDENCIES);
