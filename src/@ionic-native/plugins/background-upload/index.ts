@@ -34,6 +34,7 @@ export interface FTMPayloadOptions {
   parameters?: {
     [name: string]: string
   }
+  [prop: string]: any;
 }
 
 export interface FTMOptions {
@@ -50,8 +51,8 @@ export class FileTransferManager {
     this._objectInstance = window.FileTransferManager.init(options.config, options.callBack);
   }
 
-  @CordovaInstance({ sync: true })
-  startUpload(payload: FTMPayloadOptions): Promise<any> {
+  @CordovaInstance()
+  startUpload(payload: FTMPayloadOptions): void {
     return;
   }
 
@@ -95,7 +96,7 @@ export class FileTransferManager {
  */
 @Plugin({
   pluginName: 'BackgroundUpload',
-  plugin: '@spoonconsulting/cordova-plugin-background-upload',
+  plugin: 'cordova-plugin-background-upload',
   pluginRef: 'FileTransferManager',
   repo: 'https://github.com/spoonconsulting/cordova-plugin-background-upload',
   platforms: ['Android', 'iOS'],
