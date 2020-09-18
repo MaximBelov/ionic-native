@@ -99,6 +99,7 @@ export class FileTransferManager {
   plugin: 'cordova-plugin-background-upload',
   pluginRef: 'FileTransferManager',
   repo: 'https://github.com/spoonconsulting/cordova-plugin-background-upload',
+  install: 'ionic cordova plugin add cordova-plugin-background-upload',
   platforms: ['Android', 'iOS'],
 })
 @Injectable()
